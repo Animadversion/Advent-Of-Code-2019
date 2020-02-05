@@ -29,4 +29,3 @@ for x in range(1,3):
     print("puzzle" + str(x) + ": " + str(total))
     total = 0
     output = []
-
