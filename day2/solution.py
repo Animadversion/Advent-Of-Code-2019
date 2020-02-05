@@ -13,16 +13,18 @@ with open('input') as f:
 
 #add noun and verb as well as stop point for part 2
 try:
-    nounmax = sys.argv[1]
-    verbmax = sys.argv[2]
+    nounmax = abs(int(sys.argv[1]))
+    verbmax = abs(int(sys.argv[2]))
     try:
         #value to stop on
-        stoppoint = sys.argv[3]
+        stoppoint = int(sys.argv[3])
+    except TypeError:
+        print('integers you ape')
     except:
         stoppoint = None
 except:
     #if no noun/verb kill program
-    print('give info')
+    print('give info on noun/verb and stop point if needed \nnoun is item 1 on list and verb is item 2\nif no stop point is present program will only execute the noun/verb\nif stop point is present program\nwill execute every value from 0 to noun/verb')
     exit()
 
 #remake list with updated info as instructed
@@ -61,7 +63,7 @@ def mainfunc():
                 current = data
             elif code == 99:
                 if not stoppoint:
-                    print(data[0])
+                    print("answer: " + str(data[0]))
                 elif int(stoppoint) == int(data[0]):
                     print("answer: " + str(noun * 100 + verb))
                     exit()
