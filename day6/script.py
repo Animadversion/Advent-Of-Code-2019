@@ -50,14 +50,6 @@ def evalfunc(item):
             continue
 
 
-        # try:
-    #         orbits[path][1]['value' + path] = 1 + orbits[path][1]['value' + path] + orbits[item][1]['value' + item]
-    #     except KeyError:
-    #         orbits[path][1]['value' + path] = orbits[path][1]['value' + path] + 1   
-    #     evalfunc(item = path)
-    # else:
-    #     pass
-
     
 for item in edges:
         curritem = reverseorbit[item]
