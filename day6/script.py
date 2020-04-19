@@ -48,15 +48,13 @@ print('Total orbits: ' + str(total))
 
 
 intersections = set(orbits[moveto][1]['path' + moveto]).intersection(orbits[movefrom][1]['path' + movefrom])
-highestval = 0
-highestitem = primary
+lowestval = 1 * 10 * 100
 for item in intersections:
     itemval = orbits[item][1]['value' + item]
-    if itemval > highestval:
-        highestval = itemval
-        highestitem = item
+    movefromval = orbits[movefrom][1]['value' + movefrom] - itemval
+    movetoval = orbits[moveto][1]['value' + moveto] - itemval
+    if (movefromval + movetoval - 2) <= lowestval:
+        lowestval = movefromval + movetoval - 2
 
-movefromval = orbits[movefrom][1]['value' + movefrom] - highestval
-movetoval = orbits[moveto][1]['value' + moveto] - highestval
-print('Movement from ' + movefrom + ' to ' + moveto + ': ' + str(movefromval + movetoval - 2))
+print('Movement from ' + movefrom + ' to ' + moveto + ': ' + str(lowestval))
 
