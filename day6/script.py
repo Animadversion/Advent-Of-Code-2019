@@ -48,7 +48,7 @@ print('Total orbits: ' + str(total))
 
 
 intersections = set(orbits[moveto][1]['path' + moveto]).intersection(orbits[movefrom][1]['path' + movefrom])
-lowestval = 1 * 10 * 100
+lowestval = 1 * 10 ** 100
 for item in intersections:
     itemval = orbits[item][1]['value' + item]
     movefromval = orbits[movefrom][1]['value' + movefrom] - itemval
