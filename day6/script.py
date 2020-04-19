@@ -23,8 +23,8 @@ for line in inputdata:
         orbits[orbitee] = orbitlist
     except KeyError:
         orbitlist = []
-        orbitlist.append(orbiter)
-        orbitlist.append({"value" + orbitee : 0})
+        orbitlist.append(orbitee)
+        orbitlist.append({"value" + orbitee : 0, 'crossed' + orbitee : 1})
         orbits[orbitee] = orbitlist
     reverseorbit[orbiter] = orbitee
 
@@ -41,13 +41,17 @@ def evalfunc(item):
         path.append(reverseorbit[item])
         item = reverseorbit[item]
     j = len(path) - 1
-    path.reverse()
+    
     for thing in path:
         try:
-            orbits[thing][1]['value' + thing] = orbits[thing][1]['value' + thing] + j
+            if orbits[thing][1]['value' + thing] == 0:
+                orbits[thing][1]['value' + thing] = orbits[thing][1]['value' + thing] + j
+            else:
+                orbits[thing][1]['crossed' + thing] = orbits[thing][1]['crossed' + thing] + 1
             j = j - 1
         except KeyError:
             continue
+        
 
 
     
@@ -58,5 +62,5 @@ print(json.dumps(orbits, indent = 2))
 
 total = 0
 for item in orbits:
-    total = total + orbits[item][1]['value' + item]
+    total = total + (orbits[item][1]['value' + item] * orbits[item][1]['crossed' + item])
 print(total)
