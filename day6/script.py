@@ -3,10 +3,10 @@
 import time, json
 
 orbits = {}
-edges = []
 primary = 'COM'
 orbitvalues = {}
-reverseorbit = {}
+movefrom = 'YOU'
+moveto = 'SAN'
 
 with open('day6/input') as f:
     inputdata = f.readlines()
@@ -17,50 +17,46 @@ for line in inputdata:
     line = line.split(')')
     orbitee = line[0]
     orbiter = line[1]
-    try:
-        orbitlist = orbits[orbitee]
-        orbitlist.append(orbiter)
-        orbits[orbitee] = orbitlist
-    except KeyError:
-        orbitlist = []
-        orbitlist.append(orbitee)
-        orbitlist.append({"value" + orbitee : 0, 'crossed' + orbitee : 1})
-        orbits[orbitee] = orbitlist
-    reverseorbit[orbiter] = orbitee
+    orbitlist = []
+    orbitlist.append(orbitee)
+    if orbiter == movefrom or orbiter == moveto:
+        orbitlist.append(({"value" + orbiter : 0, 'path' + orbiter : []}))
+    else:
+        orbitlist.append({"value" + orbiter : 0})
+    orbits[orbiter] = orbitlist
 
-for item in orbits:
-    for thing in orbits[item]:
-        if type(thing) != dict:
-            if thing not in orbits.keys():
-                edges.append(thing)
-
-def evalfunc(item):
-    path = []
-    path.append(item)
-    while item != primary:
-        path.append(reverseorbit[item])
-        item = reverseorbit[item]
-    j = len(path) - 1
-    
-    for thing in path:
-        try:
-            if orbits[thing][1]['value' + thing] == 0:
-                orbits[thing][1]['value' + thing] = orbits[thing][1]['value' + thing] + j
-            else:
-                orbits[thing][1]['crossed' + thing] = orbits[thing][1]['crossed' + thing] + 1
-            j = j - 1
-        except KeyError:
-            continue
         
 
+def evalfromprimary():
+    for item in orbits:
+        path = []
+        path.append(item)
+        thing = orbits[item][0]
+        while thing != primary:
+            path.append(thing)
+            thing = orbits[thing][0]
+        orbits[item][1]['value' + item] = len(path)
+        if item in (moveto, movefrom):
+            orbits[item][1]['path' + item] = path
 
-    
-for item in edges:
-        curritem = reverseorbit[item]
-        evalfunc(item)
-print(json.dumps(orbits, indent = 2))
+evalfromprimary()
 
 total = 0
 for item in orbits:
-    total = total + (orbits[item][1]['value' + item] * orbits[item][1]['crossed' + item])
-print(total)
+    total = total + orbits[item][1]['value' + item]
+print('Total orbits: ' + str(total))
+
+
+intersections = set(orbits[moveto][1]['path' + moveto]).intersection(orbits[movefrom][1]['path' + movefrom])
+highestval = 0
+highestitem = primary
+for item in intersections:
+    itemval = orbits[item][1]['value' + item]
+    if itemval > highestval:
+        highestval = itemval
+        highestitem = item
+
+movefromval = orbits[movefrom][1]['value' + movefrom] - highestval
+movetoval = orbits[moveto][1]['value' + moveto] - highestval
+print('Movement from ' + movefrom + ' to ' + moveto + ': ' + str(movefromval + movetoval - 2))
+
